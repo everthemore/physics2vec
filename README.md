@@ -20,7 +20,8 @@ trial-and-error.
 
 ## Pre-requisites
 I currently only provide 3 python notebooks that perform the analysis of arXiv titles. Scripts might follow, but I highly 
-recommend using notebooks. Very easy to install, and super useful. See here: http://jupyter.org/
+recommend using notebooks. Very easy to install, and super useful. See here: http://jupyter.org/ If you really don't want to,
+you can also just copy-and-paste the code from the notebooks into a \*.py script and run it.
 
 You are going to need to following python modules in addition, all installable using pip3 (sudo pip3 install [module-name]).
 
