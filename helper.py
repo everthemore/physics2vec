@@ -15,7 +15,6 @@ p.defnoun('gaas', 'gaas')          #GaAs ;)
 p.defnoun('gapless', 'gapless')
 p.defnoun('haas', 'haas')
 
-
 # Check if a string has digits
 def hasNumbers(inputString):
     return any(char.isdigit() for char in inputString)
