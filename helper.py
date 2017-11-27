@@ -10,8 +10,10 @@ import gensim
 p = inflect.engine()
 p.defnoun('mass', 'mass|masses')
 p.defnoun('gas', 'gas|gases')
-p.defnoun('gas', 'gas|gasses') # Other spelling
-p.defnoun('gaas', 'gaas') #GaAs ;)
+p.defnoun('gas', 'gas|gasses')     # Other spelling
+p.defnoun('gaas', 'gaas')          #GaAs ;)
+p.defnoun('gapless', 'gapless')
+p.defnoun('haas', 'haas')
 
 
 # Check if a string has digits
@@ -67,7 +69,7 @@ def parse_title(title):
             continue
             
         # Remove other unwanted characters
-        w = stripchars(w, '\\/$(){}.<>,;:_"|\'\n `')
+        w = stripchars(w, '\\/$(){}.<>,;:_"|\'\n `?!#%')
         # Get singular form
         w = singularize(w)
         
