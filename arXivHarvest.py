@@ -23,12 +23,24 @@
 from oaipmh.client import Client
 from oaipmh.metadata import MetadataRegistry, MetadataReader
 import time
+import argparse
+
+parser = argparse.ArgumentParser(description="Harvest an arXiv subsection's titles")
+parser.add_argument('--section', type=str, required=False, default=None,
+                   help='text file with titles from harvest')
+parser.add_argument('--output', type=str, required=False, default=None,
+                   help='output filename for *.npy file')
+
+args = parser.parse_args()
+section = args.section
+output  = args.output
 
 # Change this to harvest a different arXiv set
-section="physics:cond-mat"
+section="physics:cond-mat" if section == None else section
 # And change these to specify the txt file to save the data in
-title_file = "all_cond_mat_titles.txt"
-abstr_file = "all_cond_mat_abstracts.txt"
+title_file = "all_cond_mat_titles.txt" if output == None else output
+
+#abstr_file = "all_cond_mat_abstracts.txt" 
 
 # Create a new MetadataReader, and list just the fields we are interested in
 oai_dc_reader = MetadataReader(
@@ -53,7 +65,7 @@ client = Client(URL, registry)
 
 # Open files for writing
 titlef    = open(title_file, 'w')
-abstractf = open(abstr_file, 'w')
+#abstractf = open(abstr_file, 'w')
 
 # Keep track of run-time and number of papers 
 start_time = time.time()
@@ -72,16 +84,16 @@ for record in client.listRecords(metadataPrefix='oai_dc', set=section):
 
     # Write to file (add year info to the titles)
     titlef.write("%d %d "%(year,month) + title + "\n")
-    abstractf.write(abstract + "\n")
+#    abstractf.write(abstract + "\n")
 
     count += 1
     # Flush every 100 papers to the files
     if count % 100 == 0 and count > 1:
         print("Harvested {0} papers so far (elapsed time = {1})".format(count, time.time() - start_time))
-        titlef.flush(); abstractf.flush()
+        titlef.flush(); #abstractf.flush()
 
 # Close files
-abstractf.close()
+#abstractf.close()
 titlef.close()
 
 # Report runtime and number of papers processed
