@@ -18,6 +18,9 @@ Feel free to reach out to me in case things don't work out-of-the-box. I have no
 and notebooks super user-friendly, though I did try to comment the code such that you may figure things out by
 trial-and-error. 
 
+## I just want to train a model! ##
+If you're already familiar with python, all you need to have are the modules numpy, pyoai, inflect and gensim. These should all be easy to install using pip. I provide the trainmodel.py script as a standalone script you can run with command-line parameters. It outputs a word2vec model that you can query using askmodel.py. See the files' comments for more info!
+
 ## Pre-requisites
 I currently only provide 3 python notebooks that perform the analysis of arXiv titles. Scripts might follow, but I highly 
 recommend using notebooks. Very easy to install, and super useful. See here: http://jupyter.org/ If you really don't want to,
