@@ -18,13 +18,18 @@ Feel free to reach out to me in case things don't work out-of-the-box. I have no
 and notebooks super user-friendly, though I did try to comment the code such that you may figure things out by
 trial-and-error. 
 
-## I just want to train a model! ##
-If you're already familiar with python, all you need to have are the modules numpy, pyoai, inflect and gensim. These should all be easy to install using pip. I provide the trainmodel.py script as a standalone script you can run with command-line parameters. It outputs a word2vec model that you can query using askmodel.py. See the files' comments for more info!
+## Quickstart ##
+If you're already familiar with python, all you need to have are the modules numpy, pyoai, inflect and gensim. These should all be easy to install using pip3. Then the workflow is as follows:
+1. python3 arXivHarvest.py --section physics:cond-mat --output condmattitles.txt
+2. python3 parsetitles.py --input condmattitles.txt --output condmattitles.npy
+3. python3 trainmodel.py --input condmattitles.npy --size 100 --window 10 --mincount 5 --output condmatmodel-100-10-5
+4. python3 askmodel.py --input condmatmodel-100-10-5 --add particle charge
 
-## Pre-requisites
-I currently only provide 3 python notebooks that perform the analysis of arXiv titles. Scripts might follow, but I highly 
-recommend using notebooks. Very easy to install, and super useful. See here: http://jupyter.org/ If you really don't want to,
-you can also just copy-and-paste the code from the notebooks into a \*.py script and run it.
+In step 1, we get the titles from arXiv. This is a time-consuming step; it took 1.5hrs for the physics:cond-mat section, and so I've provided the files for those in the repository already (i.e. you can skip steps 1 and 2). In step 2 we take out the weird symbols etc, and parse it into a \*.npy file. In the third step, we train a model with vector size 100, window size 10 and minimum count for words to participate of 5. Step 4 can be repeated as often as one desires. 
+
+## More details
+Apart from the above scripts, I provide 3 python notebooks that perform more than just the analysis of arXiv titles. I highly 
+recommend using notebooks. Very easy to install, and super useful. See here: http://jupyter.org/. You can also just copy-and-paste the code from the notebooks into a \*.py script and run those.
 
 You are going to need to following python modules in addition, all installable using pip3 (sudo pip3 install [module-name]).
 
@@ -56,18 +61,3 @@ Optionally, if you wish to make a WordCloud, you will need
 5. Matplotlib (https://matplotlib.org/)
 6. PIL (http://www.pythonware.com/products/pil/)
 7. WordCloud (https://github.com/amueller/word_cloud)
-
-
-## How-To
-
-1. **Optional**: run arXivHarvest.py to harvest titles and abstracts. Adjust the parameters at the top of 
-this file (they are aptly named) if you wish to change the arXiv section and/or filenames. Beware, this script runs for
-about 1.5hrs on the cond-mat subsection. 
-
-   If you wish to just play with given data, alltitles.txt already contains the cond-mat titles. 
-   Unfortunately, allabstracts.txt is too large to be uploaded (~200MB). 
-   
-2. Open one of the provided notebooks. Each will have a cell that loads&parses the titles text file you indicate, and then 
-saves the parsed results in a .npy version. The parsing takes a couple of minutes, so saving it once and then re-loading
-(by setting reparse = False) saves some time.
-
