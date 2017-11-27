@@ -9,7 +9,10 @@ import gensim
 # and similarly for gas. Please add any other exceptions to this list! 
 p = inflect.engine()
 p.defnoun('mass', 'mass|masses')
-p.defnoun('gas', 'gas|gasses')
+p.defnoun('gas', 'gas|gases')
+p.defnoun('gas', 'gas|gasses') # Other spelling
+p.defnoun('gaas', 'gaas') #GaAs ;)
+
 
 # Check if a string has digits
 def hasNumbers(inputString):
@@ -64,7 +67,7 @@ def parse_title(title):
             continue
             
         # Remove other unwanted characters
-        w = stripchars(w, '\\/$(){}.<>,;:_"|\'\n ')
+        w = stripchars(w, '\\/$(){}.<>,;:_"|\'\n `')
         # Get singular form
         w = singularize(w)
         
