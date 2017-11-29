@@ -30,7 +30,7 @@ print("{0:30} = {1}".format("mincount", mincount))
 all_titles = np.atleast_2d(np.load(inputfile))[0][0]
 all_years = sorted(list(all_titles.keys()))
 titles = get_titles_for_years(all_titles, all_years)
-ngram_titles, bigrams, ngrams = get_ngram_titles(titles)
+ngram_titles, bigrams, ngrams = get_ngrams(titles)
 model = gensim.models.Word2Vec(ngram_titles, window=window, min_count=mincount, size=size)
 print("Saving to {0}".format(outputfile))
 model.save(outputfile)
