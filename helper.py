@@ -155,32 +155,6 @@ def load_and_parse_all_titles(file):
     print("Read and parsed %d titles"%(num_titles))
     return all_titles
 
-# !!! THIS SECTION HAS NOT YET BEEN UPDATED
-# !!! IT WILL WORK, BUT THE WORDS ARE NOT RUN
-# !!! THROUGH THE SAME SCRUTINY AS THOSE OF THE
-# !!! TITLES
-#
-# Parse abstract into sentences 
-def parse_abstract(abstr):
-    sentences = []
-
-    # Clean up abstract
-    abstr.lower()   
-    abstr.replace('\'', '')
-    abstr.replace('\"', '')
-
-    # Extract sentences and split into words
-    end = abstr.find('.') 
-    while end != -1:
-        sentence = abstr[:end].replace('\n', ' ')
-        words = sentence.split(' ')
-        words = [w for w in words if w != '']
-        sentences.append( words )
-        abstr = abstr[end+1:]
-        end = abstr.find('.')
-
-    return sentences
-
 def get_titles_for_years(all_titles, years):
     """ Return list of all titles for given years (must be a list, even if only one)"""
     collectedtitles = []
@@ -192,17 +166,17 @@ def get_titles_for_years(all_titles, years):
         collectedtitles = collectedtitles + allmonthtitles
     return collectedtitles
 
-def get_ngram_titles(titles):
+def get_ngrams(sentences):
     """ Detects n-grams with n up to 4, and replaces those in the titles. """
     # Train a 2-word (bigram) phrase-detector
-    bigram_phrases = gensim.models.phrases.Phrases(titles)
+    bigram_phrases = gensim.models.phrases.Phrases(sentences)
     
     # And construct a phraser from that (an object that will take a sentence
     # and replace in it the bigrams that it knows by single objects)
     bigram = gensim.models.phrases.Phraser(bigram_phrases)
     
     # Repeat that for trigrams; the input now are the bigrammed-titles
-    ngram_phrases = gensim.models.phrases.Phrases(bigram[titles])
+    ngram_phrases = gensim.models.phrases.Phrases(bigram[sentences])
     ngram         = gensim.models.phrases.Phraser(ngram_phrases)
     
     # !! If you want to have more than 4-grams, just repeat the structure of the
@@ -213,12 +187,65 @@ def get_ngram_titles(titles):
     # The phrases.export_phrases(x) function returns pairs of phrases and their
     # certainty scores from x.
     bigram_info = {}
-    for b, score in bigram_phrases.export_phrases(titles):
+    for b, score in bigram_phrases.export_phrases(sentences):
         bigram_info[b] = [score, bigram_info.get(b,[0,0])[1] + 1]
         
     ngram_info = {}
-    for b, score in ngram_phrases.export_phrases(bigram[titles]):
+    for b, score in ngram_phrases.export_phrases(bigram[sentences]):
         ngram_info[b] = [score, ngram_info.get(b,[0,0])[1] + 1]
             
     # Return a list of 'n-grammed' titles, and the bigram and trigram info
-    return [ngram[t] for t in titles], bigram_info, ngram_info
+    return [ngram[t] for t in sentences], bigram_info, ngram_info
+
+# !!! THIS SECTION HAS NOT YET BEEN UPDATED
+# !!! IT WILL WORK, BUT IT TAKES A *VERY* LONG 
+# !!! TIME. HAS TO SWITCH TO LIST COMPREHENSION
+
+# Parse abstract into sentences 
+def parse_abstract(file):
+    # Buffer for storing the file
+    abstr = open(file, "r").read()
+            
+    sentences = []
+
+    # Clean up abstract
+    abstr.lower()   
+    abstr.replace('\'', '')
+    abstr.replace('\"', '')
+
+    # Extract sentences and split into words
+    end = abstr.find('.') 
+    while end != -1:
+        sentence = abstr[:end].replace('\n', ' ')
+       
+        # Sanitize the words
+        words = re.split( ' |-|\\|/', sentence.lower() )
+        wordlist = []
+        for i in range(len(words)):
+            w = words[i]
+
+            # Skip if there is no word, or if we have numbers
+            if len(w) < 1 or hasNumbers(w):
+                continue
+
+            # If it is (probably) math, let's skip it
+            if w[0] == '$' and w[-1] == '$':
+                continue
+
+            # Remove other unwanted characters
+            w = stripchars(w, '\\/$(){}.<>,;:_"|\'\n `?!#%')
+            # Get singular form
+            w = singularize(w)
+
+            # Skip if nothing left, or just an empty space
+            if len(w) < 1 or w == ' ':
+                continue
+
+            # Append to the list
+            wordlist.append(w)
+        
+        sentences.append( wordlist )
+        abstr = abstr[end+1:]
+        end = abstr.find('.')
+
+    return sentences
