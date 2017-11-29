@@ -13,17 +13,15 @@ This repository is (currently) a collection of python scripts and notebooks that
 ![alt text](https://raw.githubusercontent.com/everthemore/physics2vec/master/caltechwordcloud.png "arXiv:cond-mat wordcloud")
 
 ## Notes
-These scripts were tested and run using **Python 3**. I have not checked backwards compatibility.
-Feel free to reach out to me in case things don't work out-of-the-box. I have not (yet) tried to make the scripts
-and notebooks super user-friendly, though I did try to comment the code such that you may figure things out by
+These scripts were tested and run using **Python 3**. I have not checked backwards compatibility, but I have heard from people who managed to get it to work in **Python 2** too! Feel free to reach out to me in case things don't work out-of-the-box. I have not (yet) tried to make the scripts and notebooks super user-friendly, though I did try to comment the code such that you may figure things out by
 trial-and-error. 
 
 ## Quickstart ##
-If you're already familiar with python, all you need to have are the modules numpy, pyoai, inflect and gensim. These should all be easy to install using pip3. Then the workflow is as follows:
-1. python3 arXivHarvest.py --section physics:cond-mat --output condmattitles.txt
-2. python3 parsetitles.py --input condmattitles.txt --output condmattitles.npy
-3. python3 trainmodel.py --input condmattitles.npy --size 100 --window 10 --mincount 5 --output condmatmodel-100-10-5
-4. python3 askmodel.py --input condmatmodel-100-10-5 --add particle charge
+If you're already familiar with python, all you need to have are the modules numpy, pyoai, inflect and gensim. These should all be easy to install using pip/pip3. Then the workflow is as follows (I used python3):
+1. python arXivHarvest.py --section physics:cond-mat --output condmattitles.txt
+2. python parsetitles.py --input condmattitles.txt --output condmattitles.npy
+3. python trainmodel.py --input condmattitles.npy --size 100 --window 10 --mincount 5 --output condmatmodel-100-10-5
+4. python askmodel.py --input condmatmodel-100-10-5 --add particle charge
 
 In step 1, we get the titles from arXiv. This is a time-consuming step; it took 1.5hrs for the physics:cond-mat section, and so I've provided the files for those in the repository already (i.e. you can skip steps 1 and 2). In step 2 we take out the weird symbols etc, and parse it into a \*.npy file. In the third step, we train a model with vector size 100, window size 10 and minimum count for words to participate of 5. Step 4 can be repeated as often as one desires. 
 
