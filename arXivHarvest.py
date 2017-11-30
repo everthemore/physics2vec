@@ -92,7 +92,7 @@ for record in client.listRecords(metadataPrefix='oai_dc', set=section):
         if count % 100 == 0 and count > 1:
             print("Harvested {0} papers so far (elapsed time = {1})".format(count, time.time() - start_time))
             titlef.flush(); #abstractf.flush()
-    except exception as e:
+    except Exception as e:
         print("Encountered error whilst reading record: ", record)
         print("Exception: ", e)
         continue
