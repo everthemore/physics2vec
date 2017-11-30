@@ -73,24 +73,30 @@ count = 0
 
 # Harvest
 for record in client.listRecords(metadataPrefix='oai_dc', set=section):
-    # Extract the title
-    title = record[1].getField('title')[0]
-    # Extract the abstract
-    abstract = record[1].getField('abstract')[0]
-    # And get the date (this is stored as yyyy-mm-dd in the arXiv metadata)
-    date  = record[1].getField('date')[0]
-    year  = int(date[0:4])
-    month = int(date[5:7])
+    try:
+        # Extract the title
+        title = record[1].getField('title')[0]
+        # Extract the abstract
+        abstract = record[1].getField('abstract')[0]
+        # And get the date (this is stored as yyyy-mm-dd in the arXiv metadata)
+        date  = record[1].getField('date')[0]
+        year  = int(date[0:4])
+        month = int(date[5:7])
 
-    # Write to file (add year info to the titles)
-    titlef.write("%d %d "%(year,month) + title + "\n")
-#    abstractf.write(abstract + "\n")
+        # Write to file (add year info to the titles)
+        titlef.write("%d %d "%(year,month) + title + "\n")
+    #    abstractf.write(abstract + "\n")
 
-    count += 1
-    # Flush every 100 papers to the files
-    if count % 100 == 0 and count > 1:
-        print("Harvested {0} papers so far (elapsed time = {1})".format(count, time.time() - start_time))
-        titlef.flush(); #abstractf.flush()
+        count += 1
+        # Flush every 100 papers to the files
+        if count % 100 == 0 and count > 1:
+            print("Harvested {0} papers so far (elapsed time = {1})".format(count, time.time() - start_time))
+            titlef.flush(); #abstractf.flush()
+    except exception as e:
+        print("Encountered error whilst reading record: ", record)
+        print("Exception: ", e)
+        continue
+
 
 # Close files
 #abstractf.close()
